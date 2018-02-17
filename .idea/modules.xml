@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SSPLibrary.iml" filepath="$PROJECT_DIR$/SSPLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SecureSharedPreferences.iml" filepath="$PROJECT_DIR$/SecureSharedPreferences.iml" />
       <module fileurl="file://$PROJECT_DIR$/securesharedpreferences/securesharedpreferences.iml" filepath="$PROJECT_DIR$/securesharedpreferences/securesharedpreferences.iml" />
     </modules>
   </component>
