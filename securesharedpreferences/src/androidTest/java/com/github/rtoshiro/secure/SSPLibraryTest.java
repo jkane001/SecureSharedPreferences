@@ -9,6 +9,7 @@ import android.util.Base64;
 
 import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain;
 import com.facebook.crypto.Crypto;
+import com.facebook.crypto.CryptoConfig;
 import com.facebook.crypto.Entity;
 import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
@@ -227,8 +228,8 @@ public class SSPLibraryTest extends AndroidTestCase {
             return;
 
         if (value != null) {
-            Entity entity = new Entity(NAME);
-            Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+            Entity entity = Entity.create(NAME);
+            Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
             byte[] cryptedBytes = null;
             try {
@@ -252,8 +253,8 @@ public class SSPLibraryTest extends AndroidTestCase {
             return;
 
         if (values != null) {
-            Entity entity = new Entity(NAME);
-            Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+            Entity entity = Entity.create(NAME);
+            Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
             Set<String> newSet;
             byte[] cryptedBytes;
@@ -279,8 +280,8 @@ public class SSPLibraryTest extends AndroidTestCase {
     }
 
     private void putLegacyInt(String key, int value) {
-        Entity entity = new Entity(NAME);
-        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        Entity entity = Entity.create(NAME);
+        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         byte[] bytes = intToByteArray(value);
         byte[] cryptedBytes = null;
@@ -299,8 +300,8 @@ public class SSPLibraryTest extends AndroidTestCase {
     }
 
     private void putLegacyLong(String key, long value) {
-        Entity entity = new Entity(NAME);
-        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        Entity entity = Entity.create(NAME);
+        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         byte[] bytes = longToByteArray(value);
         byte[] cryptedBytes = null;
@@ -319,8 +320,8 @@ public class SSPLibraryTest extends AndroidTestCase {
     }
 
     private void putLegacyFloat(String key, float value) {
-        Entity entity = new Entity(NAME);
-        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        Entity entity = Entity.create(NAME);
+        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         byte[] bytes = floatToByteArray(value);
         byte[] cryptedBytes = null;
@@ -339,8 +340,8 @@ public class SSPLibraryTest extends AndroidTestCase {
     }
 
     private void putLegacyBoolean(String key, boolean value) {
-        Entity entity = new Entity(NAME);
-        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        Entity entity = Entity.create(NAME);
+        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         byte[] bytes = new byte[]{(byte) (value ? 1 : 0)};
         byte[] cryptedBytes = null;
@@ -359,8 +360,8 @@ public class SSPLibraryTest extends AndroidTestCase {
     }
 
     private void putLegacySerializable(String key, Serializable value) {
-        Entity entity = new Entity(NAME);
-        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        Entity entity = Entity.create(NAME);
+        Crypto crypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         byte[] bytes = serializableToByteArray(value);
         if (bytes.length > 0) {

@@ -1,5 +1,6 @@
 package com.github.rtoshiro.secure;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import com.facebook.crypto.Entity;
 import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.crypto.util.SystemNativeCryptoLibrary;
+import com.facebook.soloader.SoLoader;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,10 +49,12 @@ public class SecureSharedPreferences {
          */
         protected SharedPreferences.Editor editor;
 
+        @SuppressLint("CommitPrefEdits")
         protected Editor() {
             this.editor = getSharedPreferences().edit();
         }
 
+        @SuppressLint("CommitPrefEdits")
         protected Editor(boolean autoCommit) {
             this.editor = getSharedPreferences().edit();
             this.autoCommit = autoCommit;
@@ -226,7 +230,7 @@ public class SecureSharedPreferences {
                     e.printStackTrace();
                 }
 
-                if (cryptedBytes.length > 0) {
+                if (cryptedBytes != null && cryptedBytes.length > 0) {
                     String cryptedBase64 = Base64.encodeToString(cryptedBytes, Base64.NO_WRAP);
 
                     editor.putString(key + HIGH_BIT_ENCRYPTION_KEY, cryptedBase64);
@@ -305,8 +309,10 @@ public class SecureSharedPreferences {
     public SecureSharedPreferences(Context context) {
         super();
 
-        this.legacyEntity = new Entity(this.encryptionKey);
-        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        SoLoader.init(context, false);
+
+        this.legacyEntity = Entity.create(this.encryptionKey);
+        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         this.entity = Entity.create(encryptionKey);
         this.crypto = AndroidConceal.get().createDefaultCrypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256));
@@ -323,10 +329,12 @@ public class SecureSharedPreferences {
     public SecureSharedPreferences(Context context, String encryptionKey) {
         super();
 
+        SoLoader.init(context, false);
+
         this.encryptionKey = encryptionKey;
 
-        this.legacyEntity = new Entity(encryptionKey);
-        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        this.legacyEntity = Entity.create(this.encryptionKey);
+        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         this.entity = Entity.create(encryptionKey);
         this.crypto = AndroidConceal.get().createDefaultCrypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256));
@@ -344,14 +352,16 @@ public class SecureSharedPreferences {
     public SecureSharedPreferences(Context context, String encryptionKey, String securePrefsName) {
         super();
 
+        SoLoader.init(context, false);
+
         if (securePrefsName != null) {
             this.securePrefsName = securePrefsName;
         }
 
         this.encryptionKey = encryptionKey;
 
-        this.legacyEntity = new Entity(encryptionKey);
-        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context), new SystemNativeCryptoLibrary());
+        this.legacyEntity = Entity.create(this.encryptionKey);
+        this.legacyCrypto = new Crypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_128), new SystemNativeCryptoLibrary(), CryptoConfig.KEY_128);
 
         this.entity = Entity.create(encryptionKey);
         this.crypto = AndroidConceal.get().createDefaultCrypto(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256));
@@ -547,31 +557,37 @@ public class SecureSharedPreferences {
         return decryptedBytes;
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionString(String key, String value) {
         this.edit(true).putString(key, value);
         this.sharedPreferences.edit().remove(key).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionInt(String key, int value) {
         this.edit(true).putInt(key, value);
         this.sharedPreferences.edit().remove(key).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionFloat(String key, float value) {
         this.edit(true).putFloat(key, value);
         this.sharedPreferences.edit().remove(key).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionLong(String key, long value) {
         this.edit(true).putLong(key, value);
         this.sharedPreferences.edit().remove(key).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionBoolean(String key, boolean value) {
         this.edit(true).putBoolean(key, value);
         this.sharedPreferences.edit().remove(key).commit();
     }
 
+    @SuppressLint("ApplySharedPref")
     private void transitionSerializable(String key, Serializable value) {
         edit().putSerializable(key, value).commit();
         this.sharedPreferences.edit().remove(key).commit();
